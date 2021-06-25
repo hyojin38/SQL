@@ -132,7 +132,7 @@ SELECT product.*
    FROM product;
 ```
 
-## 열에 별칭 부여
+## 열에 별칭 부여 : AS
 
 AS 키워드는 사용해서 열에 별명을 부여할 수 있다. (select, from 절)
 
@@ -161,27 +161,74 @@ SELECT DISTINCT <열 이름> ...
    FROM <테이블 이름>;
 ```
 
-## 원하는 행 선택
+## From 테이블
 
-선택하고 싶은 행의 조건을 WHERE에 지정한다.
-
-```
-SELECT <열 이름>, ....
- FROM <테이블 이름>
-WHERE <조건식>;
-SELECT price
-  FROM product
- WHERE name = "구스잠바";
+```sql
+select *
+from branch as T, branch as S
+where T.assets>S.assets
+	and S.branch_city='대전'
+	and T.branch_city <> '대전' -- <> : not
 ```
 
-## 집약함수
+###  + String Operation :Like 
+
+​	찾고싶은 문자열 패턴을 지정할 때 사용
+
+​    부분문자열의 매칭질문은 = 대신 like 사용
+
+​	문자열패턴: %와 _기호를 사용
+
+- %: 어떤 부분 문자열
+
+- _: 어떤 한 문자
+
+  ````sql
+  where customer_street like '%Main%'
+  
+  -- Main%: Main으로 시작
+  -- %Main: Main으로 끝
+  -- %Main%: 문자열 어디든 Main 있는 것
+  -- _%Main%_ : 중간에 Main이 있는 것
+  ````
+
+  
+
+##  WHERE 원하는 행 선택
+
+선택하고 싶은 행의 조건을 WHERE에 지정
+
+- 문자열을 나타내기 위해 ' ' 사용
+- and, or, not 사용 
+- **between** 키워드 , not betweem
+
+```sql
+ select loan_number
+ from loan
+ where amount not between 900 and 1000
+ -- 900~1000이 아닌 것
+```
+
+
+
+## IS NULL/ IS NOT NULL
+
+WHERE [attribute] IS NULL //NULL 인것 조회
+
+WHERE [attribute] IS NOT NULL //NULL 이 아닌것 조회
+
+
+
+## Aggregate Function 집약함수 
+
+질의문 수행결과 (해당 attribute의 value)에 대하여 집계를 연산하는 함수
 
 `집약`은 '복수의 행을 하나의 행으로 모은다'라는 의미다.
 
 `COUNT`: 테이블 행수를 계산한다.
 
-```
-SELECT COUNT(*) // * 이것을 쓸 경우 NULL값도 포함된다.
+```sql
+SELECT COUNT(*) -- * 이것을 쓸 경우 NULL값도 포함된다.
   FROM product;
   
 SELECT COUNT(price) 특정 열을 지정할 경우 NULL값이 포함되지 않는다.
@@ -190,51 +237,83 @@ SELECT COUNT(price) 특정 열을 지정할 경우 NULL값이 포함되지 않�
 
 `SUM`: 숫자열 데이터의 합계를 구한다.
 
-```
+```sql
 SELECT SUM(price)
   FROM product;
 ```
 
 `AVG`: 숫자열 데이터의 평균을 구한다.
 
-```
+```sql
 SELECT AVG(price)
   FROM product;
 ```
 
 `MAX`: 임의 열이 가진 데이터의 최대값을 구한다.
 
-```
-SELECT MAX(price)
+```sql
+SELECT MAX(price) -- date값은 최신의 정보가 됨
   FROM product;
 ```
 
 `MIN`: 임의 열이 가진 데이터의 최소값을 구한다.
 
-```
+```sql
 SELECT MIN(price)
   FROM product;
 ```
 
 집약 함수 사용 시 중복값 제외 `DISTINCT` 키워드를 사용하여 중복을 제거할 수 있다.
 
-```
-SELECT COUNT(DISTINCT classify)
-  FROM product;
+```sql
+-- 예금주 테이블에 있는 전체 고객의 수
+SELECT COUNT(DISTINCT customer_name)
+  FROM depositor; 
 ```
 
-## GROUP BY
+### GROUP BY
 
-테이블을 테이블을 자르는 칼이다. GROUP BY 구에 지정하는 열을 `집약 키` 또는 `그룹화 열`이라 한다.
+해당 attribute 기준으로 그룹 정리 
+
+- group by 의 기준이 되는 attribute 는 select 절에 포함된 attribute 중 하나이어야한다
+
+GROUP BY 구에 지정하는 열을 `집약 키` 또는 `그룹화 열`이라 한다.
+
+```sql
+-- 각 지점의 계좌 평균 잔액은?
+SELECT branch_name , avg(balance)
+  FROM account
+ GROUP BY branch_name;
+```
+
+
+
+### HAVING 
+
+`GROUP BY`를 통해 원 테이블을 그룹으로 나누어진 그룹별로 조건을 지정해서 결과를 제한하기 위해 사용.
+
+- having 절은 반드시 group by 절 다음에 사용
+
+```sql
+-- 지점이 보유한 예금 계좌를 평균 잔액이 1200보다 큰 지점과 해당 지점의 평균 잔액을 출력하시오 
+SELECT branch_name , avg(balance)
+  FROM account
+ GROUP BY branch_name
+ HAVING avg(balance)>1200
+```
+
+```SQL
+-- Harrison 시에 거주하는 고객 중 적어도 세 개의 예금 계좌를 보유하고 있는 각 고객의 평균 잔액을 계산하시오
 
 ```
-SELECT <열 이름1>, <열 이름2>,  <열 이름3>, ....
-  FROM <테이블 이름>
-  GROUP BY <열 이름1>, <열 이름2>, <열이름3>, ....;
-SELECT classify, COUNT(*)
-  FROM product
-  GROUP BY classify;
-```
+
+
+
+#### HAVING 구에 쓸 수 있는 요소
+
+`상수`, `집약 함수`, `GROUP BY` 구에 지정한 열명(=집약키)
+
+
 
 ## SELECT 실행 순서
 
@@ -278,29 +357,22 @@ GROUP BY sb; -- error, SELECT 구에서 부여한 별명을 GROUP BY 구에서 �
 
 집약함수를 사용할 수 있는 부분은 `SELECT`구와 `HAVING` 구, `ORDER BY`구 뿐이다.
 
-## HAVING 구
 
-`GROUP BY`를 통해 원 테이블을 그룹으로 나누어진 그룹에 대해 조건을 지정해서 선택하는 방법이다.
-
-```
-SELECT classify, COUNT(*)
-  FROM product
-GROUP BY classify
-HAVING COUNT(*) = 2;
-```
-
-### HAVING 구에 쓸 수 있는 요소
-
-`상수`, `집약 함수`, `GROUP BY` 구에 지정한 열명(=집약키)
 
 ## ORDER BY 구
 
-검색 결과를 재정렬
+검색 결과를 정렬하여 출력 
+
+기본적으로 오름차순 정렬
+
+내림차순: desc
+
+오름차순: asc
 
 ```SQL
-SELECT id, name, sell_price, buy_price
-  FROM product
-ORDER BY sell_price ASC -- DESC(내림차순);
+SELECT *   
+FROM loan
+ORDER BY amount asc, name desc ; -- 두개의 기준으로 정렬
 ```
 
 ## LIMIT 
@@ -310,18 +382,78 @@ ORDER BY sell_price ASC -- DESC(내림차순);
 ```SQL
 SELECT name
 From product
-LIMIT 3; // 상위 1~3개 를 보여준다
+LIMIT 3;-- 상위 1~3개 를 보여준다
 ```
 
 ```sql
 SELECT name
 From product
-LIMIT 2,3; // 시작위치. 반환 갯수
-		   // 3번째 부터 3개의 자료를 반환 
-		   // 0 부터 시작하기 때문에 2가 3번째
+LIMIT 2,3; -- 시작위치. 반환 갯수
+		   -- 3번째 부터 3개의 자료를 반환 
+		   -- 0 부터 시작하기 때문에 2가 3번째
 ```
 
 
+
+## Set Operations 집합연산
+
+tuple 집합들 간의 연산
+
+- union, intersect, except
+
+- 모든 집합 연산은 기본적으로 중복 Tuple 을 제거한다
+
+  중복된 tuple을 제거한 다음 연산을 수행
+
+- 중복을 허용하는경우 union all, intersect all, except all 사용
+
+- 집합 연산의 주의사항
+
+  - 연산의 대상이 되는 tuple 의 Attribute 수 같아야한다
+
+  - UNION 대상이 되는 tuple 의 Attribute 는 같은 데이터형
+
+  - ORDER BY 구는 마지막에 하나만 가능
+
+    ```sql
+    (SELECT id, name   FROM product   WHERE classify = '주방용품' )
+     UNION
+    (SELECT id, name  FROM product2  WHERE classify = '주방용품' )
+     ORDER BY id;
+    ```
+
+### 1) UNION (합집합)
+
+```sql
+-- 대출이나 예금 계좌 가지고 있는 모든 고객 이름
+(SELECT customer_name  FROM depositor)
+  UNION
+(SELECT customer_name  FROM borrower)
+```
+
+### 2) INTERSECT (교집합)
+
+두 레코드 집합의 공통 부분을 선택
+
+```SQL
+-- 대출, 예금 계좌 모두 가지고 있는 모든 고객 이름
+(SELECT customer_name  FROM depositor)
+  INTERSECT
+(SELECT customer_name  FROM borrower)
+```
+
+### 3) EXCEPT (차집합)
+
+```SQL
+-- 대출계좌 없이 예금 계좌만 보유하고 있는 고객 이름
+(SELECT customer_name  FROM depositor)
+  EXCEPT
+(SELECT customer_name  FROM borrower)
+```
+
+
+
+#####  
 
 ## 데이터 갱신
 
@@ -517,85 +649,7 @@ SELECT classify, name, sell_price
                         WHERE S1.classify = S2.classify);
 ```
 
-## 집합연산
-
-### 집합연산 ?
-
-`집합`은 `레코드 집합`을 의미한다. `집합연산`은 `집합(=레코드 집합)을 더하거나 빼는 즉, 사칙연산이다. `집합연산`을 통해 두 개의 테이블에 있는 레코드를 모은 결과나 공통 레코드를 모은 결과, 한쪽에만 있는 레코드를 모은 결과 등을 취득할 수 있다.
-
-### UNION (레코드 덧셈)
-
-수학에서의 `합집합`처럼 레코드들을 합칠 수 있다.
-
-```
-SELECT id, name
-  FROM product
-UNION
-SELECT id, name
-  FROM product2
-```
-
-- Note: 중복 행은 제외한다. 만약에 중복 행을 포함하고 싶다면 `UNION ALL`을 사용한다.
-
-### 집합 연산의 주의사항
-
-#### 연산 대상이 되는 레코드의 열수가 같아야 한다.
-
-```
--- 열 수가 불일치하기 때문에 에러
-SELECT id, name
-  FROM product
-UNION
-SELECT id, name, sell_price
-  FROM product2
-```
-
-#### 덧셈 대상이 되는 레코드의 열이 같은 데이터형일 것
-
-```
-SELECT id, sell_price
-  FROM product
-UNION
-SELECT id, register_date
-  FROM product2
-```
-
-#### SELECT문은 어떤 것이든 지정할 수 있다. 단, ORDER BY 구는 마지막에 하나만 가능
-
-```
-SELECT id, name
-  FROM product
-  WHERE classify = '주방용품'
-UNION
-SELECT id, name
-  FROM product2
-  WHERE classify = '주방용품'
-ORDER BY id;
-```
-
-### INTERSECT (테이블 간 공통 부분 선택)
-
-두 레코드 집합의 공통 부분을 선택하는 것.
-
-```
-SELECT id, name
-  FROM product
-INTERSECT
-SELECT id, name
-  FROM product2
-ORDER BY id;
-```
-
-### EXCEPT (레코드 뺄셈)
-
-```
-SELECT id, name
-  FROM product
-EXCEPT
-SELECT id, name
-  FROM product2
-ORDER BY id;
-```
+##### 
 
 ## 결합
 
@@ -644,3 +698,4 @@ SELECT TS.store_id, TS.store_name, TS.id, S.name
   FROM storeProduct AS TS
   CROSS JOIN product AS S;
 ```
+
