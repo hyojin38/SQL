@@ -171,7 +171,7 @@ where T.assets>S.assets
 	and T.branch_city <> '대전' -- <> : not
 ```
 
-###  + String Operation :Like 
+###  + Like : String Operation 
 
 ​	찾고싶은 문자열 패턴을 지정할 때 사용
 
@@ -192,7 +192,18 @@ where T.assets>S.assets
   -- _%Main%_ : 중간에 Main이 있는 것
   ````
 
-  
+
+### + REGEXP
+
+ LIKE 를 이용한 검색과 달리 Regular Expression(정규 표현식)을 이용해 검색한다.
+
+ REGEXP를 사용하면 SQL에서 정규표현식을 활용하여 기본 연산자 보다 복잡한 문자열 조건을 걸어 데이터를 검색할 수 있다.
+
+```SQL
+WHERE data REGEXP 'A|B|C'
+```
+
+
 
 ##  WHERE 원하는 행 선택
 
@@ -833,7 +844,7 @@ FROM join_table
 WHERE if( CHAR_LENGTH(name) = 2, 'Y', 'N' ) = 'Y';
 ```
 
-### CASE WHEN  조건문
+### CASE WHEN THEN ELSE END 조건문
 
 ```SQL
 CASE 
@@ -854,7 +865,7 @@ SELECT
 FROM animal_ins
 ```
 
-## IFNULL 조건문
+### IFNULL 조건문
 
 ```SQL
 SELECT IFNULL(NULL이 아니면 출력, NULL이면 출력되는)
