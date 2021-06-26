@@ -171,38 +171,6 @@ where T.assets>S.assets
 	and T.branch_city <> '대전' -- <> : not
 ```
 
-###  + Like : String Operation 
-
-​	찾고싶은 문자열 패턴을 지정할 때 사용
-
-​    부분문자열의 매칭질문은 = 대신 like 사용
-
-​	문자열패턴: %와 _기호를 사용
-
-- %: 어떤 부분 문자열
-
-- _: 어떤 한 문자
-
-  ````sql
-  where customer_street like '%Main%'
-  
-  -- Main%: Main으로 시작
-  -- %Main: Main으로 끝
-  -- %Main%: 문자열 어디든 Main 있는 것
-  -- _%Main%_ : 중간에 Main이 있는 것
-  ````
-
-
-### + REGEXP
-
- LIKE 를 이용한 검색과 달리 Regular Expression(정규 표현식)을 이용해 검색한다.
-
- REGEXP를 사용하면 SQL에서 정규표현식을 활용하여 기본 연산자 보다 복잡한 문자열 조건을 걸어 데이터를 검색할 수 있다.
-
-```SQL
-WHERE data REGEXP 'A|B|C'
-```
-
 
 
 ##  WHERE 원하는 행 선택
@@ -756,13 +724,19 @@ SELECT TS.store_id, TS.store_name, TS.id, S.name
 
 #### -  HOUR(time)/MINUTE(time)/SECOND(time)
 
-#### -  date_format(date, format)
+#### -  DATE_FORMAT(date, 'format형태')
 
 ​	format에 활용되는 문자[ 참고 ](https://dev.mysql.com/doc/refman/5.7/en/date-and-time-functions.html#function_date-format)
 
-​		%Y(2021) %m(08) %d(27)
+​		%Y(2021) %m(08) %d(27) /%M(july),%D(1st)
 
 ​		%h %i %s : 시 , 분 , 초
+
+```sql
+SELECT ANIMAL_ID,NAME, DATE_FORMAT(DATETIME,''%Y-%m-%d')
+```
+
+
 
 #### - 이외 
  - dayofweek(date) / weekday(date)
@@ -874,5 +848,64 @@ SELECT IFNULL(NULL이 아니면 출력, NULL이면 출력되는)
 ```sql
 SELECT ANIMAL_TYPE,
   ifnull(NAME,'No name'),SEX_UPON_INTAKE
+```
+
+
+
+## STRING 문자열
+
+### Substirng() : 문자열 일부 추출
+
+```sql
+SUBSTR(str, pos) //str에서 pos번째 위치에서 이후의 모든 문자 읽어들인다
+SUBSTR(str, pos,len) //str에서 pos번째 위치에서 len까지 문자 읽어들인다
+
+SELECT ANIMAL_ID,NAME,SUBSTR(DATETIME, 1, 10)
+```
+
+### CONCAT() :문자열 결합
+
+```
+CONCAT (문자열1, 문자열2, 문자열3, ...)
+```
+
+### TRIM()/ RTRIM() /LTRIM() : 문자열 공백 제거
+
+​	TRIM( [ [위치:leading/trailing/both] [제거 문자열:없다면 공백 제거] FROM] 문자열 )
+
+### REPLACE() :문자열 치환
+
+​	**REPLACE**('문자열', '치환할 문자열', '치환될 문자열')
+
+###  Like : String Operation 
+
+​	찾고싶은 문자열 패턴을 지정할 때 사용
+
+​    부분문자열의 매칭질문은 = 대신 like 사용
+
+​	문자열패턴: %와 _기호를 사용
+
+- %: 어떤 부분 문자열
+
+- _: 어떤 한 문자
+
+  ````sql
+  where customer_street like '%Main%'
+  
+  -- Main%: Main으로 시작
+  -- %Main: Main으로 끝
+  -- %Main%: 문자열 어디든 Main 있는 것
+  -- _%Main%_ : 중간에 Main이 있는 것
+  ````
+
+
+###  REGEXP
+
+ LIKE 를 이용한 검색과 달리 Regular Expression(정규 표현식)을 이용해 검색한다.
+
+ REGEXP를 사용하면 SQL에서 정규표현식을 활용하여 기본 연산자 보다 복잡한 문자열 조건을 걸어 데이터를 검색할 수 있다.
+
+```SQL
+WHERE data REGEXP 'A|B|C'
 ```
 
