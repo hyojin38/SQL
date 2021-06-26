@@ -209,7 +209,28 @@ where T.assets>S.assets
  -- 900~1000이 아닌 것
 ```
 
+- **in 연산자** : 여러값을 OR 관계로 묶어 나열하는 조건을 WHERE 절에 사용할 때 쓸 수 있는 키워드
 
+  -  여러 건의 범위를 지정하는 데 사용된다 값은 , 로 구분하여 괄호 내에 묶으며, 이 값 중 하나 이상과 일치하면 조건에 맞는것으로 평가
+
+  - 장점 1.  IN  연산자에 다른 SELECT 문을 넣을 수 있다. 동적인 WHERE 절을 만들때 더  크게 활용된다.
+
+  - 장점 2. 목록에 넣을 값이 여러개일때, 보기 쉽다.
+
+  - 장점 3. 평가 순서를 보다 쉽게 관리할 수 있고 연산자의 수도 즐어든다.
+
+  - 장점 4. OR 연산자 보다 실행 속도가 빠르다
+
+  ```SQL
+  SELECT *
+  FROM  User_Table
+  WHERE user_id  IN ('user1','user3')
+  ORDER BY user_num DESC; 
+  
+  WHERE NOT User_id IN('user2','user4')
+  ```
+
+  
 
 ## IS NULL/ IS NOT NULL
 
