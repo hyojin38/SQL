@@ -816,3 +816,52 @@ SELECT TS.store_id, TS.store_name, TS.id, S.name
   ```
 
   
+
+## 조건문
+
+### IF ( 조건, 참일때 결과, 거짓일 때 결과) 
+
+제어 부분이 계속 중첩 된다면 CASE 문 사용해야한다
+
+```SQL
+SELECT if(NAME IS NULL,'No Name',NAME)
+```
+
+```sql
+SELECT * 
+FROM join_table
+WHERE if( CHAR_LENGTH(name) = 2, 'Y', 'N' ) = 'Y';
+```
+
+### CASE WHEN  조건문
+
+```SQL
+CASE 
+	WHEN 조건1 THEN '조건1 반환값'
+	WHEN 조건2 THEN '조건2 반환값'
+	ELSE '충족되는 조건 없을 때 반환값'
+END
+```
+
+```SQL
+SELECT
+	age,
+	CASE
+		WHEN (animal_ins.age BETWEEN 1 AND 3) THEN 'A'
+		WHEN (animal_ins.age BETWEEN 4 AND 6) THEN 'B'
+		ELSE 'C'
+	END AS age_group
+FROM animal_ins
+```
+
+## IFNULL 조건문
+
+```SQL
+SELECT IFNULL(NULL이 아니면 출력, NULL이면 출력되는)
+```
+
+```sql
+SELECT ANIMAL_TYPE,
+  ifnull(NAME,'No name'),SEX_UPON_INTAKE
+```
+
