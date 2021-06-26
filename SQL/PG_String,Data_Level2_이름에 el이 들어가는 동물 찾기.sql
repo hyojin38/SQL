@@ -1,0 +1,6 @@
+-- 문제 끝까지 읽기 . 결과는 이름 순으로 출력하세요 
+SELECT ANIMAL_ID,NAME
+FROM ANIMAL_INS 
+WHERE (ANIMAL_TYPE LIKE 'Dog' ) 
+    AND (NAME LIKE '%EL%')
+ORDER BY NAME;
