@@ -328,6 +328,19 @@ SELECT branch_name , avg(balance)
 
 ```
 
+```SQL
+-- Q. 각 지점별 예금 고객의 수
+SELECT branch_name, count( distinct customer_name)
+-- distinct: 한 고객이 여러 계좌를 가질 수 있기 때문
+FROM depositor as d ,account as a -- 카티션곱! 7*7
+where d.account_number=a.account_number 
+ -- 의미있는 tuple 만 뽑아내기
+ -- 두 테이블이 공통적으로 가진 attribute 동일한 값 가지고 있는가
+ GROUP BY branch_name
+ -- 고객 수가 3개 이상인 지점
+ HAVING branch_name>=3
+```
+
 
 
 #### HAVING 구에 쓸 수 있는 요소
@@ -720,3 +733,86 @@ SELECT TS.store_id, TS.store_name, TS.id, S.name
   CROSS JOIN product AS S;
 ```
 
+
+
+## 날짜 및  시간 관련 함수 정리
+
+### 1. DATETIME 데이터
+
+ YYYY-MM-DD hh:mm:ss[.nnn]
+
+#### -  YEAR(date) / MONTH(date) / DAY(date)
+
+#### -  HOUR(time)/MINUTE(time)/SECOND(time)
+
+#### -  date_format(date, format)
+
+​	format에 활용되는 문자[ 참고 ](https://dev.mysql.com/doc/refman/5.7/en/date-and-time-functions.html#function_date-format)
+
+​		%Y(2021) %m(08) %d(27)
+
+​		%h %i %s : 시 , 분 , 초
+
+#### - 이외 
+ - dayofweek(date) / weekday(date)
+
+   ​	날짜를 한 주의 몇 번째 요일인지 나타내는 숫자로 리턴
+
+   ​	(1=일/2=월/..7=토)
+
+ - dayofmonth(date) / dayofyear(date)
+
+   그 달의 몇 번째 날인지를 알려준다. 리턴 값은 1에서 31 사이이다.
+
+   그 날이 몇 번재 날인지 알려줌. 1~366
+
+ - dayname(date) / monthname(date) 
+
+   ​	해당 날짜의 영어식 요일/월 이름 리턴
+
+ - period_add(p,n)
+
+   yymm 또는 yyyymm 형식으로 주어진 달에 n개월을 더한다. 리턴 값은 yyyymm의 형식이다 
+
+   ```sql
+   elect period_add(9801,2); // 199803
+   ```
+
+- period_diff(p1,p2) 
+
+  두 기간사이의 개월을 구한다
+
+- quarter(date)
+
+  분기를 리턴 (1~4)
+
+- **date_add(date,interval expr type)** =**adddate(date,interval expr type)**
+
+  **date_sub(date,interval expr type)**=**subdate(date,interval expr type)**
+
+  sql 3.22 ver 새롭게 추가되었다.
+
+  date 는 시작일을 나타내는 datetime 또는date 타입이다. expr 는 시작일에 가감하는 일수 또는 시간을 나타내는 표현식
+
+  ```sql
+  select date_add("1997-12-31 23:59:59",interval 1 second);
+  -> 1998-01-01 00:00:00
+  
+  select date_add("1997-12-31 23:59:59",interval 1 day);
+  -> 1998-01-01 23:59:59
+  
+  select date_add("1997-12-31 23:59:59",interval "1:1" minute_second);
+  -> 1998-01-01 00:01:00
+  
+  select date_sub("1998-01-01 00:00:00",interval "1 1:1:1" day_second);
+  -> 1997-12-30 22:58:59
+  
+  select date_add("1998-01-01 00:00:00",interval "-1 10" day_hour);
+  1997-12-30 14:00:00
+  
+  select date_sub("1998-01-02", interval 31 day);
+  -> 1997-12-02
+  
+  ```
+
+  
