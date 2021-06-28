@@ -769,7 +769,7 @@ OUTER JOIN은 한 쪽에는 데이터가 있고 한쪽에는 데이터가 없는
 
 - right table 은 join 절의 table // join 기준 오른쪽
 
-  [LEFT OUTER JOOIN ](<https://github.com/hyojin38/SQL/blob/main/IMG/left_outer_join.JPG>)
+  ![LEFT OUTER JOOIN](https://github.com/hyojin38/SQL/blob/main/IMG/left_outer_join.JPG)
 
 - 매칭되는 데이터가 없는 경우 NULL표기
 
