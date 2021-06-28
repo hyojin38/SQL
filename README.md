@@ -190,16 +190,17 @@ where T.assets>S.assets
 
 - **in 연산자** : 여러값을 OR 관계로 묶어 나열하는 조건을 WHERE 절에 사용할 때 쓸 수 있는 키워드
 
-  -  여러 건의 범위를 지정하는 데 사용된다 값은 , 로 구분하여 괄호 내에 묶으며, 이 값 중 하나 이상과 일치하면 조건에 맞는것으로 평가
-
+  - ~안에 포함되어있는 DATA
+  - 여러 건의 범위를 지정하는 데 사용된다 값은 , 로 구분하여 괄호 내에 묶으며, 이 값 중 하나 이상과 일치하면 조건에 맞는것으로 평가
+  
   - 장점 1.  IN  연산자에 다른 SELECT 문을 넣을 수 있다. 동적인 WHERE 절을 만들때 더  크게 활용된다.
-
+  
   - 장점 2. 목록에 넣을 값이 여러개일때, 보기 쉽다.
-
+  
   - 장점 3. 평가 순서를 보다 쉽게 관리할 수 있고 연산자의 수도 즐어든다.
-
+  
   - 장점 4. OR 연산자 보다 실행 속도가 빠르다
-
+  
   ```SQL
   SELECT *
   FROM  User_Table
@@ -208,12 +209,16 @@ where T.assets>S.assets
   
   WHERE NOT User_id IN('user2','user4')
   ```
-
+  
   
 
-## IS NULL/ IS NOT NULL
+## NULL
+
+### IS NULL 
 
 WHERE [attribute] IS NULL //NULL 인것 조회
+
+### IS NOT NULL
 
 WHERE [attribute] IS NOT NULL //NULL 이 아닌것 조회
 
@@ -225,7 +230,21 @@ WHERE [attribute] IS NOT NULL //NULL 이 아닌것 조회
 
 `집약`은 '복수의 행을 하나의 행으로 모은다'라는 의미다.
 
-`COUNT`: 테이블 행수를 계산한다.
+- COUNT, SUM, AVG, MAX, MIN
+
+- 집약 함수 사용 시 중복값 제외 `DISTINCT` 키워드를 사용하여 중복을 제거할 수 있다.
+
+```sql
+-- 예금주 테이블에 있는 전체 고객의 수
+SELECT COUNT(DISTINCT customer_name)
+  FROM depositor; 
+```
+
+### COUNT
+  테이블 행수를 계산. 
+
+- COUNT 를 제외한 모든 aggregate operation은 NULL 값을 제외하고 계산
+- 즉, COUNT는  NULL도 하나로 세어버림
 
 ```sql
 SELECT COUNT(*) -- * 이것을 쓸 경우 NULL값도 포함된다.
@@ -235,43 +254,37 @@ SELECT COUNT(price) 특정 열을 지정할 경우 NULL값이 포함되지 않�
   FROM product;
 ```
 
-`SUM`: 숫자열 데이터의 합계를 구한다.
+### SUM
+
+ 숫자열 데이터의 합계를 구한다.
 
 ```sql
 SELECT SUM(price)
   FROM product;
 ```
 
-`AVG`: 숫자열 데이터의 평균을 구한다.
+### AVG: 숫자열 데이터의 평균을 구한다.
 
 ```sql
 SELECT AVG(price)
   FROM product;
 ```
 
-`MAX`: 임의 열이 가진 데이터의 최대값을 구한다.
+### MAX: 임의 열이 가진 데이터의 최대값을 구한다.
 
 ```sql
 SELECT MAX(price) -- date값은 최신의 정보가 됨
   FROM product;
 ```
 
-`MIN`: 임의 열이 가진 데이터의 최소값을 구한다.
+### MIN: 임의 열이 가진 데이터의 최소값을 구한다.
 
 ```sql
 SELECT MIN(price)
   FROM product;
 ```
 
-집약 함수 사용 시 중복값 제외 `DISTINCT` 키워드를 사용하여 중복을 제거할 수 있다.
-
-```sql
--- 예금주 테이블에 있는 전체 고객의 수
-SELECT COUNT(DISTINCT customer_name)
-  FROM depositor; 
-```
-
-### GROUP BY
+## GROUP BY
 
 해당 attribute 기준으로 그룹 정리 
 
@@ -286,9 +299,7 @@ SELECT branch_name , avg(balance)
  GROUP BY branch_name;
 ```
 
-
-
-### HAVING 
+## HAVING 
 
 `GROUP BY`를 통해 원 테이블을 그룹으로 나누어진 그룹별로 조건을 지정해서 결과를 제한하기 위해 사용.
 
@@ -320,11 +331,34 @@ where d.account_number=a.account_number
  HAVING branch_name>=3
 ```
 
-
-
-#### HAVING 구에 쓸 수 있는 요소
+### HAVING 구에 쓸 수 있는 요소
 
 `상수`, `집약 함수`, `GROUP BY` 구에 지정한 열명(=집약키)
+
+
+
+## Nested Sub-queries 
+
+- 다른 쿼리문 안에 포함되어있는 sub-query (중첩 서브 쿼리)
+- MAIN query 안에 포함된 sub query
+  - sub-query부터 찾은 다음
+  - select from where절로 표현
+
+### 1) IN/ NOT IN (set membership)
+
+- set membership: 집합의 멤버로 data가 포함되어있는가 아닌가
+- IN : 포함이 되어있으면 YES
+- NOT IN : 포함되어 있지 않으면 YES
+
+### 2) SOME /ALL (set comparison)
+
+- set comparison: 각 data와 어떤 집합 data 비교
+- some: 조건만족하는게 하나라도 있다면
+- all: 모든 원소가 속성 만족해야한다
+
+
+
+
 
 
 
@@ -468,61 +502,83 @@ tuple 집합들 간의 연산
 
 #####  
 
-## 데이터 갱신
+## DB의 데이터 수정 
 
-### 데이터 등록
+### 1) INSERT
 
-#### INSERT?
+`INSERT`는 특정 튜플을 relation 에 추가 
 
-`INSERT`는 레코드(행)을 삽입하는 구이다.
+-  기존 리스트와 추가 리스트의 수가 일치해야 한다.
+- 기존 리스트 생략 가능. (단, Attirbute 읫 순서를 알 때)
 
+```SQL
+INSERT INTO <테이블 이름>(열1, 열2, 열3, ...)
+	  NVALUES (값1, 값2, 값3, ...)
+
+INSERT INTO account
+		VALUES('A-9735', 'Perryridge', 1200);
+INSERT INTO account (branch_name,balance,account_number)
+		VALUES('Perryridge',1200,'A-9735');
+		
+--Q. account relation에 새로운 튜플('A-777','Perryridge')을 추가. 이 튜플의 balance는 null로 저장하시오
+INSERT INTO account 
+		VALUES('A-777', 'Perryridge', null);
+		-- 이 경우 create table 에 무결성 조건으로 1. notnull (null 을 쓸 수 x)
+		-- 2. primary key도 null을 써서는 안된다. (primary key (<attribute>))
+		-- 오류가 난다
 ```
-INSERT INTO <테이블 이름> (열1, 열2, 열3, ...) VALUES (값1, 값2, 값3, ...)
--- 열 리스트와 값 리스트의 수가 일치해야 한다.
--- 열 리스트는 생략할 수 있다.(단, 테이블 생성 당시의 열 순서로 값리스트를 넣어야 한다.)
-INSERT INTO product VALUES('0001', '세제', '주방용품', 6800, 5000, '2010-03-20');
-```
 
-#### 다른 테이블에서 데이터를 복사
+- 다른 테이블에서 데이터를 복사
 
-```
+```sql
 INSERT INTO productCopy (id, name, classify, sell_price, buy_price, register_date)
-SELECT id, name, classify, sell_price, buy_price, register_date
-  FROM product;
+	SELECT id, name, classify, sell_price, buy_price, register_date
+    FROM product;
 ```
+### 2) DELETE
 
-### 데이터 삭제
+`DELETE`는 테이블에서  특정 튜플, 레코드(행) [삭제할 조건] 을 찾아 삭제
 
-#### DELETE ?
+- 카티션곱을 사용할 수 X
+- WHERE 에는 하나의 테이블만
 
-`DELETE`는 레코드(행)을 삭제하는 구이다.
-
+```SQL
+DELETE (X) TUPLE을 통째로 삭제하므로
+FROM  <테이블(릴레이션) 이름>
+WHERE <조건Predicate>;
 ```
-DELETE FROM <테이블 이름>
-WHERE <조건>;
+```sql
+-- Q.Perryride 지점에서 개설된 모든 계좌 정보를 account relation에서 삭제
 DELETE 
-  FROM product
-  WHERE sell_price >= 5000;
+  FROM account
+  WHERE sbranch_name = 'Perryridge';
 ```
-
-### 데이터 갱신
-
-#### UPDATE ?
+```SQL
+--Q.Brooklyn시에 위치한 각 지점에서 개설된 모든 계좌 정보를 삭제 하라
+DELETE
+  FROM account
+  WHERE branch_name IN (SELECT BRANCH_NAME          //IN : ~안에 포함된 DATA 찾아서 삭제
+  						FROM branch					//NOT IN:~안에 포함되지 않은 문장 삭제
+  						where branch_city='Brooklyn');
+```
+### 3) UPDATE 
 
 `UPDATE`는 레코드(행)을 갱신하는 구이다.
 
-```
+```sql
 UPDATE <테이블 이름>
-   SET <열 이름> = <값>
+   SET <열 이름> = <값>    //attribute를 어떻게 update할지. 이름이 들ㅇ가
    WHERE <조건>;
-UPDATE product
-   SET sell_price = sell_price * 10 
- WHERE classify = '주방용품';
+
+-- Q. A 지점 계좌에 5% 이자를 지급
+UPDATE account
+   SET balance = balance * 1.05 
+ WHERE branc_name = 'A';
 ```
 
-복수 열 갱신
+- 복수 열 갱신
 
-```
+```sql
 -- 방법 1
 UPDATE product
    SET sell_price = sell_price * 20,
@@ -662,45 +718,49 @@ SELECT classify, name, sell_price
                         WHERE S1.classify = S2.classify);
 ```
 
-##### 
 
-## 결합
 
-### 결합 ?
+## JOIN
 
-`결합(JOIN)`은 다른 테이블에서 열을 가지고 와서 **열을 늘리는** 처리다.
+- `결합(JOIN)`은 다른 테이블에서 열을 가지고 와서 **열을 늘리는** 처리다.
 
-#### INNER JOIN (내부 결합)
+- 조인이란 여러 테이이블에 흩어져 있는 정보 중 사용자가 필요한 정보만 가져와서 가상의 테이블처럼 만들어서 결과를 보여주는 것으로 2개의 테이블을 조합하여 하나의 열로 표현하는 것이다.
 
+
+
+### 1)INNER JOIN (내부 결합) : 교집합
+
+- 교집합. 공통적인 부분만 select 된다
+
+```sql
+SELECT A.ID ,A.ENAME, A.KNAME
+  FROM A
+  INNER JOIN B
+  ON A.ID=B.ID 
+  
+  -- ON은 결합 조건(두개의 테이블을 연결할 열(결합키)을 설명하는 구이다.
 ```
-SELECT TS.store_id, TS.store_name, TS.id, S.name, S.sell_price
-  FROM storeProduct AS TS 
-  INNER JOIN product AS S
-  ON TS.id = S.id; -- ON은 결합 조건(두개의 테이블을 연결할 열(결합키)을 설명하는 구이다.
-```
 
-3개의 테이블을 내부 결합
+- 3개의 테이블을 내부 결합
 
-```
+```SQL
 SELECT TS.store_id, TS.store_name, TS.id, S.name, S.sell_price, ZS.stock_num
   FROM storeProduct AS TS
   INNER JOIN product AS S
   ON TS.id = S.id
-  INNER JOIN stockProduct ZS
+  [INNER] JOIN stockProduct ZS
   ON TS.id = ZS.id
-WHERE ZS.storage_id = 'S001';
+  WHERE ZS.storage_id = 'S001';
 ```
 
-#### OUTER JOIN (외부 결합)
+### 3)OUTER JOIN (외부 결합)
 
 ```
-SELECT TS.store_id, TS.store_name, S.id, S.name, S.sell_price
-  FROM storeProduct AS TS
-  RIGHT OUTER JOIN product AS S -- LEFT OUTER JOIN도 가능
-  ON TS.id = S.id;
+SELE
+
 ```
 
-#### CROSS JOIN (크로스 결합)
+### 2)CROSS JOIN (크로스 결합)
 
 `크로스 결합`은 두 개의 테이블에 있는 모든 레코드를 가지고 가능한 모든 조합을 만들어 내는 결합 방법이다. 한개의 테이블이 13행, 다른 테이블이 8행이라면 104행의 결과가 나온다.
 
@@ -711,6 +771,8 @@ SELECT TS.store_id, TS.store_name, TS.id, S.name
   FROM storeProduct AS TS
   CROSS JOIN product AS S;
 ```
+
+### 4) SELF JOIN
 
 
 
@@ -761,7 +823,7 @@ SELECT ANIMAL_ID,NAME, DATE_FORMAT(DATETIME,''%Y-%m-%d')
 
    ```sql
    elect period_add(9801,2); // 199803
-   ```
+```
 
 - period_diff(p1,p2) 
 
@@ -798,7 +860,7 @@ SELECT ANIMAL_ID,NAME, DATE_FORMAT(DATETIME,''%Y-%m-%d')
   select date_sub("1998-01-02", interval 31 day);
   -> 1997-12-02
   
-  ```
+```
 
   
 
