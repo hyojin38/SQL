@@ -723,14 +723,18 @@ SELECT classify, name, sell_price
 ## JOIN
 
 - `결합(JOIN)`은 다른 테이블에서 열을 가지고 와서 **열을 늘리는** 처리다.
-
 - 조인이란 여러 테이이블에 흩어져 있는 정보 중 사용자가 필요한 정보만 가져와서 가상의 테이블처럼 만들어서 결과를 보여주는 것으로 2개의 테이블을 조합하여 하나의 열로 표현하는 것이다.
+- 테이블 간 적어도 하나의 컬럼을 공유하고 있어야한다
+- 이 공유하고 있는 컬럼을 PK또는 FK 값으로 사용한다
 
 
 
 ### 1)INNER JOIN (내부 결합) : 교집합
 
+[INNER JOIN ](<https://github.com/hyojin38/SQL/blob/main/IMG/inner_join.JPG>)
+
 - 교집합. 공통적인 부분만 select 된다
+- sql 에서 단순히 조인 사용시 암묵적으로 inner join
 
 ```sql
 SELECT A.ID ,A.ENAME, A.KNAME
@@ -753,28 +757,162 @@ SELECT TS.store_id, TS.store_name, TS.id, S.name, S.sell_price, ZS.stock_num
   WHERE ZS.storage_id = 'S001';
 ```
 
-### 3)OUTER JOIN (외부 결합)
+### 2)OUTER JOIN (외부 결합)
 
+OUTER JOIN은 한 쪽에는 데이터가 있고 한쪽에는 데이터가 없는 경우, 데이터가 있는 쪽 테이블의 내용 전부를 출력하는 방법.
+
+즉, 조인 조건에 만족하지 않더라도 해당 행을 출력하고 싶을때 사용한다.
+
+#### 2-1. left outer join
+
+- left table 은 from 절의 table //join 기준 왼쪽
+
+- right table 은 join 절의 table // join 기준 오른쪽
+
+  [LEFT OUTER JOOIN ](<https://github.com/hyojin38/SQL/blob/main/IMG/left_outer_join.JPG>)
+
+- 매칭되는 데이터가 없는 경우 NULL표기
+
+```sql
+SELECT employee.empName, department.deptName
+  From employee
+LEFT OUTER JOIN department
+  ON employee.deptNO=department.deptNo
 ```
-SELE
 
+#### 2.2. L-R
+
+[L-R JOOIN ](<https://github.com/hyojin38/SQL/blob/main/IMG/A-B.JPG>)
+
+- JOIN 기준 왼쪽에 있는 것 '만' 
+
+- A -B = LEFT OUTER JOIN +WHERE (RIGHT KET IS NULL)
+```sql
+SELECT employee.empName, department.deptName
+  From employee
+LEFT OUTER JOIN department
+  ON employee.deptNO=department.deptNo
+  WHERE departmet.deptNo IS NULL
 ```
 
-### 2)CROSS JOIN (크로스 결합)
+#### 2-3. right outer join
 
-`크로스 결합`은 두 개의 테이블에 있는 모든 레코드를 가지고 가능한 모든 조합을 만들어 내는 결합 방법이다. 한개의 테이블이 13행, 다른 테이블이 8행이라면 104행의 결과가 나온다.
+  [RIGHT OUTER JOOIN ](<https://github.com/hyojin38/SQL/blob/main/IMG/right_outer_join.JPG>)
+
+
+```sql
+SELECT employee.empName, department.deptName
+  From employee
+RIGHT OUTER JOIN department
+  ON employee.deptNO=department.deptNo
+```
+
+#### 2-4. R-L
+
+[L-R JOOIN ](<https://github.com/hyojin38/SQL/blob/main/IMG/B-A.JPG>)
+
+- JOIN 기준 오른쪽에 있는 것 '만' 
+
+- B-A = RIGHT OUTER JOIN +WHERE (LEFT KET IS NULL)
+```sql
+SELECT employee.empName, department.deptName
+  From employee
+RIGHT OUTER JOIN department
+  ON employee.deptNO=department.deptNo
+  WHERE emplotee.deptNo IS NULL
+```
+
+#### 2-5. FULL OUTER JOIN
+
+[FULL OUTER JOIN](<https://github.com/hyojin38/SQL/blob/main/IMG/outer_join.JPG>)
+
+- A, B 테이블이 가지고 있는 것 다
+
+  임효진	IT
+
+  문정진	NULL
+
+  NULL	경리부
+
+  NULL	인사부
+
+```sql
+SELECT employee.empName, department.deptName
+  From employee
+FULL OUTER JOIN department
+  ON employee.deptNO=department.deptNo
+```
+
+#### 2-5. FULL OUTER JOIN -A,B의 교집합 제외
+
+[FULL OUTER JOIN](<https://github.com/hyojin38/SQL/blob/main/IMG/FULL-AB.JPG>)
+
+- 왼쪽에 있는 것만 + 오른쪽에 있는 것 만
+
+  문정진	NULL
+
+  NULL	경리부
+
+  NULL	인사부
+
+```sql
+SELECT employee.empName, department.deptName
+  From employee
+FULL OUTER JOIN department
+  ON employee.deptNO=department.deptNo
+  WHERE employee.deptNo IS NULL
+  OR department.deptNo IS NULL
+```
+
+### 3)CROSS JOIN (크로스 결합) : 2*3=6
+
+`크로스 결합`은  특정 기준없이. 두 개의 테이블에 있는 모든 레코드를 가지고 가능한 모든 조합을 만들어 내는 결합 방법이다. 
+
+한개의 테이블이 2행, 다른 테이블이 3행이라면 6행의 결과가 나온다.
+
+- 특정 기준이 필요 없어 ON 이 사용되지 않음
 
 `내부 결합`은 '`크로스 결합` 결과에 포함되는 부분을 가진다'라는 의미를 내포하며, `외부 결합`은 '`크로스 결합` 결과에 포함되지 않는 부분을 가진다'라는 의미가 있다.
 
+```SQL
+SELECT employee.empName, department.deptName 
+  FROM employee
+  CROSS JOIN department;
+  임효진	IT 
+  문정진	IT
+  임효진   경리부
+  문정진	경리부
+  임효진   인사부
+  문정진	인사부
 ```
-SELECT TS.store_id, TS.store_name, TS.id, S.name
-  FROM storeProduct AS TS
-  CROSS JOIN product AS S;
-```
+
 
 ### 4) SELF JOIN
 
+ 자기 스스로를 결합
 
+셀프 조인은 이너조인 및 아우터 조인, 크로스 조인과 동일 방식으로 사용될 수 있지만 join 할 때 기본 테이블 이외에 참조하는 테이블이 다른 테이블이 아닌 자기 자신이라는 점이 중요하다.
+
+- 별칭이 필수
+
+  | empNo | empName | job  | manager | hirdate | deptNo |
+  | ----- | ------- | ---- | ------- | ------- | ------ |
+  | 1001  | 임효진  | 사원 | 1013    | 2021.07 | 1      |
+
+  테이블에서 사원 정보와 manager 사번이 있따.
+
+  사원이름과 그 사원의 매니저의 이름을 알고 싶을 때 셀프 조인을 사용한다.
+
+  ```sql
+  SELECT A.empName 직원이름 , B,empName 매니저이름
+    FROM employee A
+  SELF JOIN employee B
+      ON A.manager=B.empNo
+  ```
+
+  
+
+  
 
 ## 날짜 및  시간 관련 함수 정리
 
@@ -882,7 +1020,7 @@ WHERE if( CHAR_LENGTH(name) = 2, 'Y', 'N' ) = 'Y';
 
 ### CASE WHEN THEN ELSE END 조건문
 
-```SQL
+​```SQL
 CASE 
 	WHEN 조건1 THEN '조건1 반환값'
 	WHEN 조건2 THEN '조건2 반환값'
