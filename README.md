@@ -782,7 +782,7 @@ LEFT OUTER JOIN department
 
 #### 2.2. L-R
 
-[L-R JOOIN ](<https://github.com/hyojin38/SQL/blob/main/IMG/A-B.JPG>)
+![L-R JOOIN ](https://github.com/hyojin38/SQL/blob/main/IMG/A-B.JPG)
 
 - JOIN 기준 왼쪽에 있는 것 '만' 
 
@@ -797,7 +797,7 @@ LEFT OUTER JOIN department
 
 #### 2-3. right outer join
 
-  [RIGHT OUTER JOOIN ](<https://github.com/hyojin38/SQL/blob/main/IMG/right_outer_join.JPG>)
+  ![RIGHT OUTER JOOIN ](https://github.com/hyojin38/SQL/blob/main/IMG/right_outer_join.JPG)
 
 
 ```sql
@@ -809,7 +809,7 @@ RIGHT OUTER JOIN department
 
 #### 2-4. R-L
 
-[L-R JOOIN ](<https://github.com/hyojin38/SQL/blob/main/IMG/B-A.JPG>)
+![L-R JOOIN ](https://github.com/hyojin38/SQL/blob/main/IMG/B-A.JPG)
 
 - JOIN 기준 오른쪽에 있는 것 '만' 
 
@@ -824,7 +824,7 @@ RIGHT OUTER JOIN department
 
 #### 2-5. FULL OUTER JOIN
 
-[FULL OUTER JOIN](<https://github.com/hyojin38/SQL/blob/main/IMG/outer_join.JPG>)
+![FULL OUTER JOIN](https://github.com/hyojin38/SQL/blob/main/IMG/outer_join.JPG)
 
 - A, B 테이블이 가지고 있는 것 다
 
@@ -845,7 +845,7 @@ FULL OUTER JOIN department
 
 #### 2-5. FULL OUTER JOIN -A,B의 교집합 제외
 
-[FULL OUTER JOIN](<https://github.com/hyojin38/SQL/blob/main/IMG/FULL-AB.JPG>)
+![FULL OUTER JOIN](https://github.com/hyojin38/SQL/blob/main/IMG/FULL-AB.JPG)
 
 - 왼쪽에 있는 것만 + 오른쪽에 있는 것 만
 
