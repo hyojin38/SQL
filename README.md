@@ -731,7 +731,7 @@ SELECT classify, name, sell_price
 
 ### 1)INNER JOIN (내부 결합) : 교집합
 
-[INNER JOIN ](<https://github.com/hyojin38/SQL/blob/main/IMG/inner_join.JPG>)
+![INNER JOIN ](https://github.com/hyojin38/SQL/blob/main/IMG/inner_join.JPG)
 
 - 교집합. 공통적인 부분만 select 된다
 - sql 에서 단순히 조인 사용시 암묵적으로 inner join
