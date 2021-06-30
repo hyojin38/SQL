@@ -1033,7 +1033,7 @@ CASE
 END
 ```
 
-​```SQL
+```SQL
 SELECT
 	age,
 	CASE
@@ -1046,7 +1046,7 @@ FROM animal_ins
 
 ### IFNULL 조건문
 
-```SQL
+​```SQL
 SELECT IFNULL(NULL이 아니면 출력, NULL이면 출력되는)
 ```
 
@@ -1112,5 +1112,39 @@ CONCAT (문자열1, 문자열2, 문자열3, ...)
 
 ```SQL
 WHERE data REGEXP 'A|B|C'
+```
+
+
+
+## 기타
+
+### 1. WITH RECURSIVE
+
+- 메모리 상에 가상의 테이블을 저장
+- 재귀 쿼리를 이용하여 실제로 테이블을 생성하거나 데이터 삽입을 하지 않아도 가상 테이블을 생성할 수 있다
+
+```
+WITH RECURSIVE 테이블명 AS(
+	(SELECT 초기값 AS 컬럼별명1)
+	UNION ALL
+	(SELECT 컬럼별명1 계산식 
+	FROM 테이블명)
+	WHERE 제어문)
+```
+
+```sql
+WITH RECURSIVE TIME_T AS (
+  (SELECT 0 AS H)
+  UNION ALL
+  (SELECT H+1 
+  FROM TIME_T
+  WHERE H<23)
+)
+
+SELECT TIME_T.H,COUNT(HOUR(ANIMAL_OUTS.DATETIME))
+FROM TIME_T
+LEFT OUTER JOIN ANIMAL_OUTS 
+ON TIME_T.H=HOUR(ANIMAL_OUTS.DATETIME)
+GROUP BY TIME.H_T
 ```
 
