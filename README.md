@@ -905,13 +905,18 @@ SELECT employee.empName, department.deptName
 
   ```sql
   SELECT A.empName 직원이름 , B,empName 매니저이름
-    FROM employee A
-  SELF JOIN employee B
-      ON A.manager=B.empNo
+  FROM employee A
+  (  )JOIN employee B
+  ON A.manager=B.empNo
   ```
 
+  ```SQL
+  SELECT A.empName 직원이름 , B,empName 매니저이름FROM employee A, employee B
+  WHERE A.manager=B.empNo
+  ```
   
-
+  
+  
   
 
 ## 날짜 및  시간 관련 함수 정리
@@ -1020,7 +1025,7 @@ WHERE if( CHAR_LENGTH(name) = 2, 'Y', 'N' ) = 'Y';
 
 ### CASE WHEN THEN ELSE END 조건문
 
-​```SQL
+```SQL
 CASE 
 	WHEN 조건1 THEN '조건1 반환값'
 	WHEN 조건2 THEN '조건2 반환값'
@@ -1028,7 +1033,7 @@ CASE
 END
 ```
 
-```SQL
+​```SQL
 SELECT
 	age,
 	CASE
