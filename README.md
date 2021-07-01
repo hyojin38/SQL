@@ -179,7 +179,7 @@ where T.assets>S.assets
 
 - 문자열을 나타내기 위해 ' ' 사용
 - and, or, not 사용 
-- **between** 키워드 , not betweem
+- **between** 키워드 , not between
 
 ```sql
  select loan_number
@@ -355,6 +355,14 @@ where d.account_number=a.account_number
 - set comparison: 각 data와 어떤 집합 data 비교
 - some: 조건만족하는게 하나라도 있다면
 - all: 모든 원소가 속성 만족해야한다
+
+```sql
+##대구시에 위치한 어떤 지점보다 많은 자산을 가지고 있는 모든 지점의 이름을 찾으시오 : some
+```
+
+```sql
+##대구 시에 위치한 모든 지점보다 많은 자산을 가지고 있는 지점을 찾으시오 : all
+```
 
 
 
@@ -625,16 +633,18 @@ COMMIT
 
 ### 지속성(Durability)
 
-### 뷰
+## Views
 
-#### 뷰와 테이블 차이
+- 사용자는 데이터베이스에 포함된 모든 테이블의 정보 (즉, logical level의 데이터)를 알고 있을 필요가 없다
+- view란 특정 사용자에게 공개된 데이터를 의미
+- 다른 데이터는 hidden
+- **View의 생성**
 
-테이블과 뷰는 비슷하지만, 테이블은 `실제 데이터`를 저장하는 반면, 뷰는 테이블에서 데이터를 꺼내는 `SELECT 문`을 저장한다.
-
-```
+```sql
 CREATE VIEW <뷰 이름> (<뷰의 열명1>, <뷰의 열명2>, ...)
 AS
 <SELECT 문> -- SELECT문 열과 뷰 열의 순서가 일치해야 한다.
+
 CREATE VIEW productSum (classify, count_product)
 AS
 SELECT classify, COUNT(*)
@@ -1046,7 +1056,7 @@ FROM animal_ins
 
 ### IFNULL 조건문
 
-​```SQL
+```SQL
 SELECT IFNULL(NULL이 아니면 출력, NULL이면 출력되는)
 ```
 
@@ -1101,7 +1111,7 @@ CONCAT (문자열1, 문자열2, 문자열3, ...)
   -- %Main: Main으로 끝
   -- %Main%: 문자열 어디든 Main 있는 것
   -- _%Main%_ : 중간에 Main이 있는 것
-  ````
+````
 
 
 ###  REGEXP
