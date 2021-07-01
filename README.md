@@ -948,7 +948,7 @@ SELECT employee.empName, department.deptName
 ​		%h %i %s : 시 , 분 , 초
 
 ```sql
-SELECT ANIMAL_ID,NAME, DATE_FORMAT(DATETIME,''%Y-%m-%d')
+SELECT ANIMAL_ID,NAME, DATE_FORMAT(DATETIME,'%Y-%m-%d')
 ```
 
 
@@ -976,7 +976,7 @@ SELECT ANIMAL_ID,NAME, DATE_FORMAT(DATETIME,''%Y-%m-%d')
 
    ```sql
    elect period_add(9801,2); // 199803
-```
+```sql
 
 - period_diff(p1,p2) 
 
@@ -1088,6 +1088,23 @@ CONCAT (문자열1, 문자열2, 문자열3, ...)
 
 ​	TRIM( [ [위치:leading/trailing/both] [제거 문자열:없다면 공백 제거] FROM] 문자열 )
 
+```SQL
+SELECT TRIM(' HYOJIN '); - HYOJIN
+SELECT TRIM (TRAILING FROM ' HYOJIN ') -' HYOJIN'
+SELECT TRIM (LEADING FROM ' HYOJIN ') -'HYOJIN '
+
+SELECT TRIM (BOTH 'x' FROM 'xxxHYOJINxxx') -'HYOJIN'
+SELECT TRIM (LEADING 'x' FROM 'xxxHYOJINxxx') -'HYOJINxxx'
+SELECT TRIM (TRAILING 'x' FROM 'xxxHYOJINxxx')-'xxxHYOJIN'
+```
+
+```SQL
+SELECT LTRIM(' HYOJIN ') -'HYOJIN ' 좌측공백만제거
+SELECT RTRIM(' HYOJIN ') -' HYOJIN' 우측공백만제거
+```
+
+
+
 ### REPLACE() :문자열 치환
 
 ​	**REPLACE**('문자열', '치환할 문자열', '치환될 문자열')
@@ -1103,15 +1120,15 @@ CONCAT (문자열1, 문자열2, 문자열3, ...)
 - %: 어떤 부분 문자열
 
 - _: 어떤 한 문자
-
-  ````sql
+ ```sql
   where customer_street like '%Main%'
   
   -- Main%: Main으로 시작
   -- %Main: Main으로 끝
   -- %Main%: 문자열 어디든 Main 있는 것
   -- _%Main%_ : 중간에 Main이 있는 것
-````
+ ```
+
 
 
 ###  REGEXP
@@ -1120,7 +1137,7 @@ CONCAT (문자열1, 문자열2, 문자열3, ...)
 
  REGEXP를 사용하면 SQL에서 정규표현식을 활용하여 기본 연산자 보다 복잡한 문자열 조건을 걸어 데이터를 검색할 수 있다.
 
-```SQL
+``` SQL
 WHERE data REGEXP 'A|B|C'
 ```
 
