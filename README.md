@@ -1120,7 +1120,9 @@ SELECT RTRIM(' HYOJIN ') -' HYOJIN' 우측공백만제거
 - %: 어떤 부분 문자열
 
 - _: 어떤 한 문자
+
  ```sql
+
   where customer_street like '%Main%'
   
   -- Main%: Main으로 시작
@@ -1150,16 +1152,15 @@ WHERE data REGEXP 'A|B|C'
 - 메모리 상에 가상의 테이블을 저장
 - 재귀 쿼리를 이용하여 실제로 테이블을 생성하거나 데이터 삽입을 하지 않아도 가상 테이블을 생성할 수 있다
 
-```
-WITH RECURSIVE 테이블명 AS(
+  ```sql
+	WITH RECURSIVE 테이블명 AS(
 	(SELECT 초기값 AS 컬럼별명1)
 	UNION ALL
 	(SELECT 컬럼별명1 계산식 
 	FROM 테이블명)
 	WHERE 제어문)
-```
-
 ```sql
+
 WITH RECURSIVE TIME_T AS (
   (SELECT 0 AS H)
   UNION ALL
@@ -1174,4 +1175,3 @@ LEFT OUTER JOIN ANIMAL_OUTS
 ON TIME_T.H=HOUR(ANIMAL_OUTS.DATETIME)
 GROUP BY TIME.H_T
 ```
-
