@@ -1104,14 +1104,14 @@ CONCAT (문자열1, 문자열2, 문자열3, ...)
 
 - _: 어떤 한 문자
 
-  ````sql
+  ```sql
   where customer_street like '%Main%'
   
   -- Main%: Main으로 시작
   -- %Main: Main으로 끝
   -- %Main%: 문자열 어디든 Main 있는 것
   -- _%Main%_ : 중간에 Main이 있는 것
-````
+  ```
 
 
 ###  REGEXP
